@@ -9,6 +9,7 @@ Modal.setAppElement('#root');
 function ListPage() {
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null); // Состояние для выбранной книги
+    const [fileType, setFileType] = useState('pdf'); // Состояние для выбора типа файла
     const [modalIsOpen, setModalIsOpen] = useState(false); // Состояние для модального окна
 
     useEffect(() => {
@@ -35,13 +36,21 @@ function ListPage() {
         if (selectedBook) {
             api.delete(`/books/${selectedBook.id}`)
                 .then(() => {
-                    console.log(`Book with ID ${selectedBook.id} deleted successfully.`)
-                    fetchBooks()
-                    closeModal()
+                    console.log(`Book with ID ${selectedBook.id} deleted successfully.`);
+                    fetchBooks();
+                    closeModal();
                 })
-                .catch(error => console.error('Error deleting book:', error))
+                .catch(error => console.error('Error deleting book:', error));
         }
-    }
+    };
+
+    const downloadBook = () => {
+        if (selectedBook && fileType) {
+
+            const downloadUrl = `${api.getUri()}/books/download/${selectedBook.id}?fileType=${fileType}`;
+            window.open(downloadUrl, '_blank');
+        }
+    };
 
     return (
         <div className="p-4 bg-gray-100 min-h-screen">
@@ -88,8 +97,22 @@ function ListPage() {
                                 className="h-60 w-40 object-cover mb-4 rounded shadow-md"
                             />
                         )}
+                        {/* Добавляем выбор типа файла */}
+                        <div className="mb-4">
+                            <label htmlFor="fileType" className="block text-gray-600 mb-1">Выберите тип файла:</label>
+                            <select
+                                id="fileType"
+                                value={fileType}
+                                onChange={(e) => setFileType(e.target.value)}
+                                className="w-full p-2 border rounded"
+                            >
+                                <option value="pdf">PDF</option>
+                                <option value="epub">EPUB</option>
+                                <option value="mobi">MOBI</option>
+                            </select>
+                        </div>
                         <div className="flex justify-between">
-                            <button className="bg-green-500 text-white px-4 py-2 rounded">Загрузить</button>
+                            <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={downloadBook}>Загрузить</button>
                             <button className="bg-yellow-500 text-white px-4 py-2 rounded">Изменить</button>
                             <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={deleteBook}>Удалить</button>
                         </div>
