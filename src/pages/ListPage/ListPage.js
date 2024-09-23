@@ -46,14 +46,20 @@ function ListPage() {
 
     const downloadBook = () => {
         if (selectedBook && fileType) {
-
             const downloadUrl = `${api.getUri()}/books/download/${selectedBook.id}?fileType=${fileType}`;
             window.open(downloadUrl, '_blank');
         }
     };
 
+    // Обработчик для клика по кнопке добавления книги
+    const handleAddBookClick = () => {
+        console.log('Кнопка добавления книги нажата!');
+        // Здесь можно добавить логику для открытия формы добавления новой книги
+    };
+
+    // Внутри вашего компонента ListPage
     return (
-        <div className="p-4 bg-gray-100 min-h-screen">
+        <div className="p-4 bg-gray-100 min-h-screen relative"> {/* Добавляем relative для родительского контейнера */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {books.map(book => (
                     <div key={book.id} className="flex flex-col items-center">
@@ -77,6 +83,11 @@ function ListPage() {
                     </div>
                 ))}
             </div>
+
+            {/* Кнопка добавления новой книги */}
+            <button className="absolute bottom-5 right-5 bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-green-600 transition">
+                <span className="text-2xl" style={{ marginBottom: '2px' }}>+</span> {/* Сдвигаем плюсик чуть выше */}
+            </button>
 
             {/* Модальное окно */}
             <Modal
