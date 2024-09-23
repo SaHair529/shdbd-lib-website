@@ -12,12 +12,15 @@ function ListPage() {
     const [modalIsOpen, setModalIsOpen] = useState(false); // Состояние для модального окна
 
     useEffect(() => {
+        fetchBooks()
+    }, []);
+
+    const fetchBooks = () => {
         api.get('/books')
             .then(response => setBooks(response.data))
             .catch(error => console.error('Error fetching books:', error))
-    }, []);
+    }
 
-    // Открыть модальное окно
     const openModal = (book) => {
         setSelectedBook(book);
         setModalIsOpen(true);
@@ -27,6 +30,18 @@ function ListPage() {
         setSelectedBook(null);
         setModalIsOpen(false);
     };
+
+    const deleteBook = () => {
+        if (selectedBook) {
+            api.delete(`/books/${selectedBook.id}`)
+                .then(() => {
+                    console.log(`Book with ID ${selectedBook.id} deleted successfully.`)
+                    fetchBooks()
+                    closeModal()
+                })
+                .catch(error => console.error('Error deleting book:', error))
+        }
+    }
 
     return (
         <div className="p-4 bg-gray-100 min-h-screen">
@@ -76,7 +91,7 @@ function ListPage() {
                         <div className="flex justify-between">
                             <button className="bg-green-500 text-white px-4 py-2 rounded">Загрузить</button>
                             <button className="bg-yellow-500 text-white px-4 py-2 rounded">Изменить</button>
-                            <button className="bg-red-500 text-white px-4 py-2 rounded">Удалить</button>
+                            <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={deleteBook}>Удалить</button>
                         </div>
                     </div>
                 )}
