@@ -113,7 +113,6 @@ function ListPage() {
                         </div>
                         <div className="flex justify-between">
                             <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={downloadBook}>Загрузить</button>
-                            <button className="bg-yellow-500 text-white px-4 py-2 rounded">Изменить</button>
                             <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={deleteBook}>Удалить</button>
                         </div>
                     </div>
