@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import api from "../../apiConfig";
+import './ListPage.css';
 
 function ListPage() {
     const [books, setBooks] = useState([]);
@@ -16,9 +17,9 @@ function ListPage() {
                 {books.map(book => (
                     <div key={book.id} className="flex flex-col items-center">
                         {book['coverImageUrl'] ? (
-                            <img src={book['coverImageUrl']} alt={book.title} className="h-48 w-32 object-cover mb-2 rounded shadow-md"/>
+                            <img src={book['coverImageUrl']} alt={book.title} className="h-48 w-32 object-cover mb-2 rounded shadow-md book-card"/>
                         ) : (
-                            <div className="h-48 w-32 bg-gray-200 mb-2 flex items-center justify-center rounded shadow-md"><span className="text-gray-500 text-sm">No Image</span></div>
+                            <div className="h-48 w-32 bg-gray-200 mb-2 flex items-center justify-center rounded shadow-md"><span className="text-gray-500 text-sm book-card">No Image</span></div>
                         )}
                         <h2 className="font-medium text-sm text-center">{book.title}</h2>
                         <p className="text-gray-500 text-xs text-center">{book.author}</p>

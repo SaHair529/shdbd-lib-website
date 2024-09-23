@@ -1,0 +1,6 @@
+.book-card {
+    cursor: pointer;
+}
+.book-card:hover {
+    opacity: .9;
+}
