@@ -10,7 +10,9 @@ function ListPage() {
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null); // Состояние для выбранной книги
     const [fileType, setFileType] = useState('pdf'); // Состояние для выбора типа файла
-    const [modalIsOpen, setModalIsOpen] = useState(false); // Состояние для модального окна
+    const [modalIsOpen, setModalIsOpen] = useState(false); // Состояние для модального окна книги
+    const [addModalIsOpen, setAddModalIsOpen] = useState(false); // Состояние для модального окна добавления книги
+    const [newBook, setNewBook] = useState({ title: '', author: '', coverImageUrl: '' }); // Состояние для новой книги
 
     useEffect(() => {
         fetchBooks()
@@ -51,13 +53,28 @@ function ListPage() {
         }
     };
 
-    // Обработчик для клика по кнопке добавления книги
     const handleAddBookClick = () => {
-        console.log('Кнопка добавления книги нажата!');
-        // Здесь можно добавить логику для открытия формы добавления новой книги
+        setAddModalIsOpen(true); // Открытие модалки добавления новой книги
     };
 
-    // Внутри вашего компонента ListPage
+    const closeAddModal = () => {
+        setAddModalIsOpen(false);
+        setNewBook({ title: '', author: '', coverImageUrl: '' });
+    };
+
+    const handleNewBookChange = (e) => {
+        setNewBook({ ...newBook, [e.target.name]: e.target.value });
+    };
+
+    const handleNewBookSubmit = () => {
+        api.post('/books', newBook)
+            .then(() => {
+                fetchBooks();
+                closeAddModal();
+            })
+            .catch(error => console.error('Error adding book:', error));
+    };
+
     return (
         <div className="p-4 bg-gray-100 min-h-screen relative"> {/* Добавляем relative для родительского контейнера */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -85,11 +102,54 @@ function ListPage() {
             </div>
 
             {/* Кнопка добавления новой книги */}
-            <button className="absolute bottom-5 right-5 bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-green-600 transition">
-                <span className="text-2xl" style={{ marginBottom: '2px' }}>+</span> {/* Сдвигаем плюсик чуть выше */}
+            <button
+                onClick={handleAddBookClick}
+                className="absolute bottom-5 right-5 bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-green-600 transition"
+            >
+                <span className="text-2xl" style={{ marginBottom: '2px' }}>+</span>
             </button>
 
-            {/* Модальное окно */}
+            {/* Модальное окно для добавления новой книги */}
+            <Modal
+                isOpen={addModalIsOpen}
+                onRequestClose={closeAddModal}
+                contentLabel="Add New Book"
+                className="modal"
+                overlayClassName="modal-overlay"
+            >
+                <div className="modal-content">
+                    <h2 className="text-lg font-bold mb-4">Добавить новую книгу</h2>
+                    <div className="mb-4">
+                        <label htmlFor="title" className="block text-gray-600 mb-1">Название книги</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={newBook.title}
+                            onChange={handleNewBookChange}
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="coverImageUrl" className="block text-gray-600 mb-1">URL обложки</label>
+                        <input
+                            type="text"
+                            id="coverImageUrl"
+                            name="coverImageUrl"
+                            value={newBook.coverImageUrl}
+                            onChange={handleNewBookChange}
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
+                    <div className="flex justify-between">
+                        <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleNewBookSubmit}>
+                            Добавить книгу
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Модальное окно для просмотра книги */}
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
