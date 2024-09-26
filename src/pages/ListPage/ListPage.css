@@ -32,3 +32,25 @@
     z-index: 1001; /* Поверх overlay */
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2); /* Тень для выделения */
 }
+
+/* Скрываем оригинальный input */
+.hidden-file-input {
+    display: none;
+}
+
+/* Кастомная кнопка для загрузки файла */
+.custom-file-label {
+    background-color: #00aaff; /* Ярко голубой фон */
+    color: white; /* Белый текст */
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.custom-file-label:hover {
+    background-color: #0099dd; /* Темнее при наведении */
+}

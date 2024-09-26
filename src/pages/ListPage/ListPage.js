@@ -166,13 +166,21 @@ function ListPage() {
                     </div>
                     <div className="mb-4">
                         <label htmlFor="bookFile" className="block text-gray-600 mb-1">Файл книги</label>
+
+                        {/* Скрытый input для выбора файла */}
                         <input
                             type="file"
                             id="bookFile"
                             name="bookFile"
                             onChange={(e) => setFile(e.target.files[0])} // Сохраняем выбранный файл
-                            className="w-full p-2 border rounded"
+                            className="hidden-file-input"
                         />
+
+                        {/* Кастомная кнопка для выбора файла */}
+                        <label htmlFor="bookFile" className="custom-file-label">Выберите файл</label>
+
+                        {/* Отображение имени файла, если он выбран */}
+                        {file && <span style={{float: 'right'}}>{file.name}</span>}
                     </div>
                     <div className="flex justify-between">
                         <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleNewBookSubmit}>
