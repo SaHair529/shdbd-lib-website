@@ -68,6 +68,11 @@ function ListPage() {
     };
 
     const handleNewBookSubmit = () => {
+        if (!newBook.title.trim()) {
+            alert('Название книги обязательно для заполнения')
+            return
+        }
+
         api.post('/books', newBook)
             .then((response) => {
                 fetchBooks();
