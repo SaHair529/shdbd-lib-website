@@ -8,6 +8,7 @@ Modal.setAppElement('#root');
 
 function ListPage() {
     const [books, setBooks] = useState([]);
+    const [file, setFile] = useState(null); // Для загрузки файла
     const [selectedBook, setSelectedBook] = useState(null); // Состояние для выбранной книги
     const [fileType, setFileType] = useState('pdf'); // Состояние для выбора типа файла
     const [modalIsOpen, setModalIsOpen] = useState(false); // Состояние для модального окна книги
@@ -68,9 +69,27 @@ function ListPage() {
 
     const handleNewBookSubmit = () => {
         api.post('/books', newBook)
-            .then(() => {
+            .then((response) => {
                 fetchBooks();
                 closeAddModal();
+
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    // Отправляем файл на сервер для связанной книги
+                    api.post(`/books/upload/${response.data.id}`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    })
+                        .then(() => {
+                            console.log('File uploaded successfully');
+                        })
+                        .catch((error) => {
+                            console.error('Error uploading file:', error);
+                        });
+                }
             })
             .catch(error => console.error('Error adding book:', error));
     };
@@ -140,6 +159,16 @@ function ListPage() {
                             className="w-full p-2 border rounded"
                         />
                     </div>
+                    <div className="mb-4">
+                        <label htmlFor="bookFile" className="block text-gray-600 mb-1">Файл книги</label>
+                        <input
+                            type="file"
+                            id="bookFile"
+                            name="bookFile"
+                            onChange={(e) => setFile(e.target.files[0])} // Сохраняем выбранный файл
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
                     <div className="flex justify-between">
                         <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleNewBookSubmit}>
                             Добавить книгу
@@ -156,7 +185,7 @@ function ListPage() {
                 className="modal"
                 overlayClassName="modal-overlay"
             >
-                {selectedBook && (
+            {selectedBook && (
                     <div className="modal-content">
                         <h2 className="text-lg font-bold mb-2">{selectedBook.title}</h2>
                         {selectedBook.coverImageUrl && (
