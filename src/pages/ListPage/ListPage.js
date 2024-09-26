@@ -12,7 +12,7 @@ function ListPage() {
     const [fileType, setFileType] = useState('pdf'); // Состояние для выбора типа файла
     const [modalIsOpen, setModalIsOpen] = useState(false); // Состояние для модального окна книги
     const [addModalIsOpen, setAddModalIsOpen] = useState(false); // Состояние для модального окна добавления книги
-    const [newBook, setNewBook] = useState({ title: '', author: '', coverImageUrl: '' }); // Состояние для новой книги
+    const [newBook, setNewBook] = useState({ title: '', coverImageUrl: '' }); // Состояние для новой книги
 
     useEffect(() => {
         fetchBooks()
@@ -59,7 +59,7 @@ function ListPage() {
 
     const closeAddModal = () => {
         setAddModalIsOpen(false);
-        setNewBook({ title: '', author: '', coverImageUrl: '' });
+        setNewBook({ title: '', coverImageUrl: '' });
     };
 
     const handleNewBookChange = (e) => {
@@ -96,7 +96,6 @@ function ListPage() {
                             </div>
                         )}
                         <h2 className="font-medium text-sm text-center">{book.title}</h2>
-                        <p className="text-gray-500 text-xs text-center">{book.author}</p>
                     </div>
                 ))}
             </div>
@@ -160,7 +159,6 @@ function ListPage() {
                 {selectedBook && (
                     <div className="modal-content">
                         <h2 className="text-lg font-bold mb-2">{selectedBook.title}</h2>
-                        <p className="text-sm text-gray-600 mb-4">{selectedBook.author}</p>
                         {selectedBook.coverImageUrl && (
                             <img
                                 src={selectedBook.coverImageUrl}
